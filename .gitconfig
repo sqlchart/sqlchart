@@ -1,0 +1,35 @@
+[branch "alpha"]
+    merge = refs/heads/alpha
+    remote = origin
+[branch "base"]
+    merge = refs/heads/base
+    remote = origin
+[core]
+    # autocrlf = false
+    autocrlf = input
+    bare = false
+    # filemode = false
+    logallrefupdates = true
+    repositoryformatversion = 0
+[diff]
+    algorithm = histogram
+[receive]
+    denyCurrentBranch = warn
+[remote "aa-bb"]
+    fetch = +refs/heads/*:refs/remotes/aa-bb/*
+    url = https://github.com/kaizhu256/node-aa-bb
+[remote "fork"]
+    fetch = +refs/heads/*:refs/remotes/fork/*
+    url = https://github.com/kaizhu256/sqlchart
+[remote "heroku"]
+    fetch = +refs/heads/*:refs/remotes/heroku/*
+    url = git@heroku.com:h1-utility2-alpha.git
+[remote "origin"]
+    fetch = +refs/heads/*:refs/remotes/origin/*
+    url = https://github.com/kaizhu256/sqlchart
+[remote "upstream"]
+    fetch = +refs/heads/*:refs/remotes/upstream/*
+    url = https://github.com/kaizhu256/sqlchart
+[remote "utility2"]
+    fetch = +refs/heads/*:refs/remotes/utility2/*
+    url = https://github.com/kaizhu256/sqlchart
