@@ -52,14 +52,6 @@ table tbody tr td,
     height: 20px;
     min-width: 50px;
 }
-.button:hover,
-#contextmenu1 tbody tr[data-crud]:hover,
-#panelContent1 .dataTable tbody tr:hover,
-#panelContent1 .title:hover,
-#panelSidebar1 tbody tr[data-hashtag]:hover {
-    background: #dde !important;
-    box-shadow: 0 0 1px #000;
-}
 #contextmenu1 {
     border: 1px solid;
     position: fixed;
@@ -83,9 +75,6 @@ table tbody tr td,
 #panelSidebar1 > div {
     text-align: center;
 }
-#datatables_buttons_info {
-    border: 1px solid #777;
-}
 #datatables_buttons_info table tbody tr {
     display: none;
 }
@@ -100,13 +89,23 @@ table tbody tr td,
     width: 100%;
 }
 #datatables_buttons_info table tbody tr td span {
-    border-right: 10px solid #fff;
     padding: 2px 2px 0 2px;
 }
 #datatables_buttons_info textarea {
     height: 150px;
     padding: 5px;
     width: 100%;
+}
+#datatables_buttons_info .loader {
+    animation: loaderSpin 2s linear infinite;
+    border: 10px solid #dde;
+    border-radius: 50% !important;
+    border-top: 10px solid #37f;
+    height: 50px;
+    left: 50%;
+    top: 50%;
+    width: 50px;
+    z-index: 9999;
 }
 #datatables_buttons_info > div {
     padding: 10px;
@@ -115,7 +114,7 @@ table tbody tr td,
     margin: 10px 0 0 0;
 }
 #datatables_buttons_info > div > div:nth-child(1) {
-    margin: 0;
+    margin: auto;
 }
 #datatables_buttons_info > h2 {
     font-size: 20px;
@@ -138,9 +137,6 @@ table tbody tr td,
 }
 #panelContent1 .dataTable {
     margin: 0;
-}
-#panelContent1 .dataTable tbody tr {
-    background: transparent;
 }
 #panelContent1 .dataTable tbody tr td,
 #panelContent1 .dataTable thead tr th {
@@ -200,10 +196,19 @@ table tbody tr td,
     text-align: left;
     width: 100%;
 }
+@keyframes loaderSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
 /* validateLineSortedReset */
 a,
 a:focus,
-a:hover {
+a:hover,
+#panelSidebar1 table tbody tr[data-hashtag] {
     color: #37f;
 }
 .button,
@@ -211,27 +216,41 @@ a:hover {
 .button:hover {
     border: 1px solid #999;
 }
+.button:hover,
+#contextmenu1 tbody tr[data-crud]:hover,
+#panelContent1 .dataTable tbody tr:hover,
+#panelContent1 .title:hover,
+#panelSidebar1 tbody tr[data-hashtag]:hover {
+    background: #dde !important;
+    box-shadow: 0 0 1px #000;
+}
 #contextmenu1 {
     background: #fff;
 }
 #contextmenu1 table tbody tr,
 #contextmenu1 table thead tr th,
 #panelContent1 .title,
+#panelSidebar1 table tbody tr,
 #panelSidebar1 table tbody tr td:nth-child(1),
 #panelSidebar1 > div {
     border-bottom: 1px solid #bbb;
 }
+#datatables_buttons_info {
+    border: 1px solid #777;
+}
 #datatables_buttons_info table tbody tr td span {
     background: #dde;
+    border-right: 10px solid #fff;
 }
-#panelContent1 canvas {
-    border: 1px solid #bbb;
-}
+#panelContent1 canvas,
 #panelContent1 .CodeMirror {
     border: 1px solid #bbb;
 }
 #panelContent1 .dataTable tbody {
     color: #037;
+}
+#panelContent1 .dataTable tbody tr {
+    background: transparent;
 }
 #panelContent1 .dataTable thead tr th {
     border-right: 1px solid #bbb;
@@ -254,14 +273,8 @@ a:hover {
 #panelSidebar1 {
     border-right: 1px solid #777;
 }
-#panelSidebar1 table tbody tr {
-    border-bottom: 1px solid #bbb;
-}
 #panelSidebar1 table tbody tr td:nth-child(1) {
     background: #dde;
-}
-#panelSidebar1 table tbody tr[data-hashtag] {
-    color: #37f;
 }
 #panelSidebar1 table tbody tr[data-t_type=index] td:nth-child(1) {
     background: #eef;
@@ -390,8 +403,8 @@ CREATE INDEX idx_employees_salary ON employees(salary);
 SELECT * FROM (VALUES
     ('#!sqlchart','{"chartType":"bar"}'),
     (NULL, NULL),
-    ('x', 'SELECT name from employees ORDER BY name'),
-    ('y', 'SELECT ''employee'' AS label, salary from employees ORDER BY name')
+    ('x', 'SELECT name FROM employees ORDER BY name'),
+    ('y', 'SELECT ''employee'' AS label, salary FROM employees ORDER BY name')
 );
 SELECT * FROM (VALUES
     ('#!sqlchart','{"chartType":"line","xType":"time"}'),
@@ -405,7 +418,7 @@ CREATE TABLE employees2 AS SELECT a.name, a.designation
 INSERT INTO employees2 (name, designation) SELECT a.name, a.designation
     FROM employees2 AS a CROSS JOIN employees2;
 SELECT * FROM employees2;</textarea>
-    <button class="button" id="dbExec1">execute</button>
+    <button class="button" id="dbExec1">sql editor - execute</button>
     </div> <!-- #editor1 -->
     <div id="sqlResultData1"></div>
     <div id="sqlResultData2"></div>
@@ -1001,12 +1014,18 @@ Definition of the CSV Format
         uiLoaderInfo(false);
     }
 
-    function uiLoaderStart() {
+    function uiLoaderStart({
+        msg,
+        modeForce
+    }) {
     /*
      * this function will start ui-loading-animation
      */
-        if (!document.querySelector("#datatables_buttons_info")) {
-            uiLoaderInfo("", "loading ...");
+        if (modeForce || !document.querySelector("#datatables_buttons_info")) {
+            uiLoaderInfo(
+                msg || "loading",
+                "<div class=\"loader\"><\/div>"
+            );
         }
     }
 
@@ -1194,7 +1213,7 @@ Definition of the CSV Format
             data = await sqlPostMessage({
                 sql: (
                     "SELECT COUNT(*) FROM \"" + tbl_name + "\";\n" +
-                    "SELECT * FROM \"" + tbl_name + "\"\n" +
+                    "SELECT rowid, * FROM \"" + tbl_name + "\"\n" +
                     "ORDER BY \"" + colList[colIi] + "\"\n" +
                     (
                         order[0].dir === "asc"
@@ -1227,6 +1246,9 @@ Definition of the CSV Format
         promise2 = new Promise(function (resolve) {
             resolve2 = resolve;
         });
+        if (sqlResultIi === 2) {
+            colList.unshift("rowid");
+        }
         // ui-render datatable
         $(elem.querySelector("table")).datatable({
             ajax,
@@ -1323,6 +1345,10 @@ Definition of the CSV Format
                 break;
             }
         }));
+        elem.querySelector("canvas").style.height = (
+            (10 * datasets.length + 400) +
+            "px"
+        );
         chart = new Chart(elem.querySelector("canvas"), {
             data: {
                 datasets,
@@ -1332,6 +1358,7 @@ Definition of the CSV Format
                 animation: {
                     duration: 0
                 },
+                maintainAspectRatio: false,
                 plugins: {
                     zoom: {
                         zoom: {
@@ -1410,7 +1437,7 @@ Definition of the CSV Format
         let err;
         let id;
         let timeElapsed;
-        uiLoaderStart();
+        uiLoaderStart({});
         timeElapsed = Date.now();
         sqlCallbackId += 1;
         id = sqlCallbackId;
@@ -1559,7 +1586,7 @@ Definition of the CSV Format
         // if (target.files.length === 0) {
         //     return;
         // }
-        uiLoaderStart();
+        uiLoaderStart({});
         rowList = await target.files[0].text();
         rowList = jsonRowListFromCsv({
             csv: rowList
@@ -1622,6 +1649,10 @@ COMMIT;
         uiLoaderEnd({
             modeForce: true
         });
+        uiLoaderStart({
+            msg: "sql editor - execute",
+            modeForce: true
+        });
         sql = sql || sqlEditor.getValue() + ";";
         try {
             data = await sqlPostMessage({
@@ -1633,7 +1664,7 @@ COMMIT;
             return;
         }
         // 2. ui-render result to html
-        uiRenderSqlResultIi({
+        await uiRenderSqlResultIi({
             sqlResultIi: 1,
             tableList: data.tableList
         });
@@ -1762,7 +1793,7 @@ ORDER BY tbl_name, type DESC, name;
     /*
      * this function will save db to file
      */
-        uiLoaderStart();
+        uiLoaderStart({});
         if (data === undefined) {
             data = await sqlPostMessage({
                 action: "export"
@@ -2059,7 +2090,7 @@ TO
                 })
             ],
             [
-                "#dbCrudConfirm1", "click", uiLoaderEnd.bind(undefined, {
+                "#dbCrudConfirm1", "click", uiLoaderStart.bind(undefined, {
                     modeForce: true
                 })
             ]
@@ -2078,7 +2109,7 @@ TO
     }).buttons;
     uiLoaderInfo = uiLoaderInfo.info.bind(uiLoaderInfo);
     uiLoaderInfo0 = uiLoaderInfo;
-    uiLoaderStart();
+    uiLoaderStart({});
     // init sqlWorker
     sqlCallbackDict = {};
     sqlCallbackId = 1;
