@@ -301,6 +301,16 @@ a:hover,
     <tr data-t_type="result" data-crud="save to csv">
         <td></td><td></td>
     </tr>
+    <tr data-t_type="row" data-crud="insert">
+        <td></td><td></td>
+    </tr>
+    <tr data-t_type="row" data-crud="update">
+        <td></td><td></td>
+    </tr>
+    <tr data-t_type="row"><td colspan="2">&nbsp;</td></tr>
+    <tr data-t_type="row" data-crud="delete">
+        <td></td><td></td>
+    </tr>
     <tr data-t_type="table" data-crud="rename">
         <td></td><td></td>
     </tr>
@@ -1100,7 +1110,7 @@ Definition of the CSV Format
             t_type = t_type || "result";
             description = (
                 t_type === "index"
-                ? " I" + (ii + 1) + " - " + tbl_name + " . " + t_name
+                ? "  I" + (ii + 1) + " - " + tbl_name + " . " + t_name
                 : t_type === "table"
                 ? "T" + (ii + 1) + " - " + t_name
                 : "R" + (ii + 1) + " - result"
@@ -1177,13 +1187,13 @@ Definition of the CSV Format
      * this function will ui-render datatable and chart
      */
         ajax = uiRenderError(async function ({
+            colIi,
+            data,
             draw,
             length,
             order,
             start
         }, callback) {
-            let colIi;
-            let data;
             colIi = order[0].column;
             if (sqlResultIi === 1) {
                 rowList.sort(function (aa, bb) {
@@ -1259,6 +1269,17 @@ Definition of the CSV Format
                     title: name
                 };
             }),
+            createdRow: sqlResultIi === 2 && function ({
+                dataset
+            }, [
+                rowid
+            ]) {
+                Object.assign(dataset, {
+                    hashtag: elem.id,
+                    rowid,
+                    t_type: "row"
+                });
+            },
             data: rowList,
             // dom: "lfrtip",
             dom: "rti",
@@ -1518,6 +1539,7 @@ Definition of the CSV Format
                 onDbCrud(Object.assign(
                     {},
                     sqlResultDict[contextmenuDataset.hashtag],
+                    contextmenuDataset,
                     target.dataset
                 ));
             }
@@ -1532,7 +1554,8 @@ Definition of the CSV Format
         evt.preventDefault();
         evt.stopPropagation();
         target = target.closest(
-            "#panelSidebar1 tbody tr[data-t_type]"
+            "#panelContent1 tr[data-t_type=row]," +
+            "#panelSidebar1 tr[data-t_type]"
         );
         // contextmenu - hide
         if (!target) {
@@ -1820,6 +1843,7 @@ ORDER BY tbl_name, type DESC, name;
         data,
         i_list = [],
         modeConfirm,
+        rowid,
         rowList,
         sql,
         t_name = "",
@@ -1930,6 +1954,31 @@ DROP INDEX
             t_name2: "{{new_index}}",
             t_sql
         }) + `;
+
+-- row - delete
+DELETE FROM
+    "{{t_name}}"
+WHERE
+    rowid = ${rowid};
+
+-- row - insert
+INSERT INTO
+    "{{t_name}}"
+(
+    ${"\"" + colList.slice(1).join("\",\n    \"") + "\""}
+)
+VALUES
+(
+    ${new Array(Math.max(colList.length - 1, 0)).fill("NULL").join(",\n    ")}
+);
+
+-- row - update
+UPDATE
+    "{{t_name}}"
+SET
+    ${"\"" + colList.slice(1).join("\" = NULL,\n    \"") + "\" = NULL"}
+WHERE
+    rowid = ${rowid};
 
 -- table - add column
 ALTER TABLE
@@ -2052,10 +2101,13 @@ TO
     <div>inspect and/or edit sql, then click "ok"<\/div>
     <textarea>${stringHtmlSafe(sql)}<\/textarea>
 <\/div>
-<div>
+<div style="text-align: right;">
     <button id="dbCrudConfirm1" class="button">ok<\/button>
-    &nbsp;&nbsp;&nbsp;&nbsp;
-    <button id="dbCrudCancel1" class="button">cancel<\/button>
+    <button
+        id="dbCrudCancel1"
+        class="button"
+        style="margin-left: 20px;"
+    >cancel<\/button>
 <\/div>
         `));
         uiLoaderInfo = noop;
