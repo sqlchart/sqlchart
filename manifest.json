@@ -1,0 +1,11 @@
+{
+  "name": "sqlchart",
+  "version": "2021.1.9",
+  "description": "this zero-dependency package will provide a frontend-ui to visualize sqlite database",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {},
+  "manifest_version": 2
+}
