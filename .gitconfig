@@ -1,6 +1,9 @@
 [branch "alpha"]
     merge = refs/heads/alpha
     remote = origin
+[branch "gh-pages"]
+    merge = refs/heads/gh-pages
+    remote = origin
 [branch "base"]
     merge = refs/heads/base
     remote = origin

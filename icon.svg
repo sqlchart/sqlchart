@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" height="256" width="256">
+<rect
+    fill="#258"
+    height="400"
+    stroke="#000"
+    width="400"
+    x="0"
+    y="0"
+/>
+<text
+    fill="#def"
+    font-family="Source Sans Pro"
+    font-weight="600"
+>
+<tspan
+    font-size="100px"
+    x="16px"
+    y="112px"
+>SQL</tspan>
+<tspan
+    font-size="80px"
+    x="12px"
+    y="216px"
+>CHART</tspan>
+</text>
+</svg>

@@ -1,11 +1,22 @@
 {
-  "name": "sqlchart",
-  "version": "2021.1.9",
-  "description": "this zero-dependency package will provide a frontend-ui to visualize sqlite database",
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  },
-  "browser_action": {},
-  "manifest_version": 2
+    "background": {
+        "persistent": false,
+        "scripts": [
+            "background.js"
+        ]
+    },
+    "browser_action": {},
+    "description": "visualize and edit sqlite-database as 2d-charts",
+    "fileCount": 18,
+    "icons": {
+        "16": "icon16.png",
+        "32": "icon32.png",
+        "48": "icon48.png",
+        "64": "icon128.png",
+        "128": "icon128.png",
+        "256": "icon128.png"
+    },
+    "manifest_version": 2,
+    "name": "sqlchart",
+    "version": "2021.2.6"
 }

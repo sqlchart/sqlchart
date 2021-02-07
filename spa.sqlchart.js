@@ -895,6 +895,9 @@ Definition of the CSV Format
                     xLabel = data.colList[0];
                     return;
                 case "xy":
+                    if (chartType === "line" && !xType) {
+                        xType = "linear";
+                    }
                     xLabel = data.colList[1];
                     yLabel = data.colList[2];
                     break;
@@ -963,17 +966,6 @@ Definition of the CSV Format
                                 labelString: xLabel
                             },
                             type: xType
-                            // offset: true,
-                            //!! ticks: {
-                                //!! major: {
-                                    //!! enabled: true
-                                //!! },
-                                //!! source: "data",
-                                //!! autoSkip: true
-                            // autoSkipPadding: 75,
-                            // maxRotation: 0,
-                            // sampleSize: 100
-                            //!! }
                         }
                     ],
                     yAxes: [
@@ -1796,6 +1788,8 @@ TO
     ]) {
         document.querySelector(selector).addEventListener(evt, cb);
     });
+    // reset location.hash
+    location.hash = "";
     // style - validate
     setTimeout(domStyleValidate, 1000);
     // export

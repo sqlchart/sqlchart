@@ -1,5 +1,5 @@
 {
-    "description": "this zero-dependency package will provide a frontend-ui to visualize sqlite database",
+    "description": "this zero-dependency package will provide frontend-ui to visualize and edit sqlite-database as 2d-charts",
     "name": "sqlchart",
-    "version": "2021.1.9"
+    "version": "2021.2.6"
 }
