@@ -1823,7 +1823,7 @@ TO
         let data;
         data = (
             /\bsqlDb=([^&]+)/
-        ).exec(location.earch);
+        ).exec(location.search);
         if (!data) {
             return;
         }
