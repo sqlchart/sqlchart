@@ -6,6 +6,7 @@ window.addEventListener("load", async function () {
         Blob,
         Chart,
         CodeMirror,
+        blobDownload,
         contextmenuDataset,
         onDbCrud,
         onDbRefresh,
@@ -1054,8 +1055,21 @@ Definition of the CSV Format
         }
         results = results.map(function ({
             columns,
+            ii,
+            jj,
             values
         }) {
+            ii = 0;
+            while (ii < values.length) {
+                jj = 0;
+                while (jj < values[ii].length) {
+                    if (values[ii][jj]?.constructor === Uint8Array) {
+                        values[ii][jj] = "<blob>";
+                    }
+                    jj += 1;
+                }
+                ii += 1;
+            }
             return {
                 colList: columns,
                 rowList: values,
@@ -1366,11 +1380,13 @@ ORDER BY tbl_name, type DESC, name;
     async function onDbSave({
         data,
         elem,
-        file = "sql-db.db"
+        file = "sql-db.sqlite"
     }) {
     /*
      * this function will save db to file
      */
+        // cleanup
+        URL.revokeObjectURL(blobDownload);
         uiLoaderStart({});
         if (data === undefined) {
             data = await sqlPostMessage({
@@ -1378,16 +1394,16 @@ ORDER BY tbl_name, type DESC, name;
             });
             data = data.buffer;
         }
-        elem = document.createElement("a");
-        elem.href = URL.createObjectURL(new Blob([
+        blobDownload = URL.createObjectURL(new Blob([
             data
         ]));
+        elem = document.createElement("a");
+        elem.href = blobDownload;
+        // cleanup
+        setTimeout(function () {
+            URL.revokeObjectURL(elem.href);
+        }, 30000);
         elem.download = file.replace(".", "-" + new Date().toISOString() + ".");
-        elem.onclick = function () {
-            setTimeout(function () {
-                URL.revokeObjectURL(elem.href);
-            }, 15000);
-        };
         uiLoaderEnd({});
         elem.click();
     }
@@ -1804,19 +1820,18 @@ TO
     });
     // init sqlDb
     await(async function () {
-        let sqlDb;
-        sqlDb = (
+        let data;
+        data = (
             /\bsqlDb=([^&]+)/
-        ).exec(location.search);
-        sqlDb = sqlDb && sqlDb[1];
-        if (!sqlDb) {
+        ).exec(location.earch);
+        if (!data) {
             return;
         }
-        sqlDb = await fetch(sqlDb);
-        sqlDb = await sqlDb.arrayBuffer();
+        data = await fetch(data[1]);
+        data = await data.arrayBuffer();
         await sqlPostMessage({
             action: "open",
-            data: sqlDb
+            data
         });
     }());
     // init sqlScript

@@ -7,7 +7,6 @@
     },
     "browser_action": {},
     "description": "visualize and edit sqlite-database as 2d-charts",
-    "fileCount": 18,
     "icons": {
         "16": "icon16.png",
         "32": "icon32.png",
