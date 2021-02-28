@@ -338,10 +338,8 @@ Definition of the CSV Format
                 return row[ii];
             });
         });
-        return {
-            colList,
-            rowList
-        };
+        rowList.unshift(colList);
+        return rowList;
     }
 
     function jsonRowListToCsv({
@@ -410,8 +408,6 @@ Definition of the CSV Format
             colListPriority,
             rowList
         });
-        rowList.rowList.unshift(rowList.colList);
-        rowList = rowList.rowList;
         return rowList.map(function (row) {
             return row.map(function (val) {
                 if (val === undefined || val === null) {
@@ -699,12 +695,9 @@ Definition of the CSV Format
 <div class="sqlResultData" data-t_type="${t_type}" id="${hashtag}">
     <div class="title">${stringHtmlSafe(description)}</div>
     <table></table>
-    <div style="position: relative;">
-    <button
-        class="chartResetZoom"
-        style="display: none; position: absolute;"
-    >reset zoom</button>
-    <canvas style="display: none;"></canvas>
+    <div class="chartContainer">
+    <button class="chartResetZoom">reset zoom</button>
+    <canvas></canvas>
     </div>
 </div>
             `);
@@ -727,19 +720,23 @@ Definition of the CSV Format
         // ui-render - datatable and chart
         return Promise.all(Array.from(document.querySelectorAll(
             "#sqlResultData" + sqlResultIi + " .sqlResultData"
-        )).map(function (elem, ii) {
+        )).map(function (elem, elemIi) {
             uiRenderSqlResultTableIi(Object.assign({
                 elem,
+                elemIi,
                 sqlResultIi
-            }, tableList[ii]));
+            }, tableList[elemIi]));
         }));
     }
 
-    uiRenderSqlResultTableIi = uiRenderError(async function zqjx1({
+    uiRenderSqlResultTableIi = uiRenderError(async function ({
         ajax,
         chart,
         colList,
+        description,
         elem,
+        elemIi,
+        elemTr,
         promise2,
         resolve2,
         rowList,
@@ -759,6 +756,7 @@ Definition of the CSV Format
             start
         }, callback) {
             colIi = order[0].column;
+            // datatable - full
             if (sqlResultIi === 1) {
                 rowList.sort(function (aa, bb) {
                     aa = aa[colIi];
@@ -784,6 +782,7 @@ Definition of the CSV Format
                 });
                 return;
             }
+            // datatable - paginate
             data = await sqlPostMessage({
                 sql: (
                     "SELECT COUNT(*) FROM \"" + tbl_name + "\";\n" +
@@ -873,8 +872,7 @@ Definition of the CSV Format
             xType,
             yLabel
         } = JSON.parse(rowList[0][1]);
-        elem.querySelector(".chartResetZoom").style.display = "block";
-        elem.querySelector("canvas").style.display = "block";
+        elem.classList.add("sqlResultChart");
         await Promise.all(rowList.slice(2).map(async function ([
             key, sql
         ]) {
@@ -934,7 +932,7 @@ Definition of the CSV Format
             }
         }));
         elem.querySelector("canvas").style.height = (
-            (10 * datasets.length + 400) +
+            (12 * datasets.length + 400) +
             "px"
         );
         chart = new Chart(elem.querySelector("canvas"), {
@@ -983,7 +981,7 @@ Definition of the CSV Format
                 },
                 title: {
                     display: true,
-                    text: chartTitle || (yLabel + " vs. " + xLabel)
+                    text: ""
                 },
                 tooltips: {
                     intersect: false,
@@ -992,12 +990,25 @@ Definition of the CSV Format
             },
             type: chartType
         });
-        // bug-workaround - init resetZoom
-        chart.resetZoom();
+        // init resetZoom
         elem.querySelector(".chartResetZoom").addEventListener(
             "click",
             chart.resetZoom.bind(chart)
         );
+        // bug-workaround - resetZoom
+        chart.resetZoom();
+        // update description
+        description = "R" + (elemIi + 1) + " - chart - " + stringHtmlSafe(
+            chartTitle || (yLabel + " vs. " + xLabel)
+        );
+        elem.querySelector(".title").textContent = description;
+        elemTr = document.querySelector(
+            "#sqlResultMeta1 tr[data-hashtag=" + elem.id + "]"
+        );
+        elemTr.children[1].textContent = description;
+        elemTr.title = elemTr.title.replace((
+            /:\u0020".*"/
+        ), ": " + JSON.stringify(description));
         return promise2;
     });
 
@@ -1818,11 +1829,11 @@ TO
         uiLoaderInfo,
         uiRenderError
     });
-    // init sqlDb
+    // init sqlFile
     await(async function () {
         let data;
         data = (
-            /\bsqlDb=([^&]+)/
+            /\bsqlFile=([^&]+)/
         ).exec(location.search);
         if (!data) {
             return;

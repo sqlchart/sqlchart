@@ -147,8 +147,21 @@ table tbody tr td,
 #panelContent1 .dataTables_info {
     padding-top: 2px;
 }
+#panelContent1 .sqlResultChart .chartContainer {
+    display: block !important;
+}
+#panelContent1 .sqlResultChart .dataTables_wrapper {
+    display: none !important;
+}
 #panelContent1 .sqlResultData {
     margin-top: 50px;
+}
+#panelContent1 .sqlResultData .chartContainer {
+    display: none;
+    position: relative;
+}
+#panelContent1 .sqlResultData .chartContainer .chartResetZoom {
+    position: absolute;
 }
 #panelContent1 .sqlResultData[data-t_type=index] {
     margin-top: 0;
@@ -456,6 +469,7 @@ SELECT * FROM (VALUES
         ORDER BY ticker, date
     ')
     );
+SELECT * FROM stock_historical;
 
 -- visualize enron-dataset
 DROP TABLE IF EXISTS enron_email_fts;
@@ -699,6 +713,7 @@ SELECT * FROM (VALUES
         ORDER BY tmp1.phrase, enron_date.date;
     ')
     );
+SELECT * FROM enron_email_fts;
 </textarea>
     <button class="button" id="dbExec1">sql editor - execute</button>
     </div> <!-- #editor1 -->
