@@ -623,11 +623,12 @@ Definition of the CSV Format
             "<div style=\"color: #d00;\">sql error</div>",
             (`
 <div style="color: #d00;">${stringHtmlSafe(err.message)}</div><br>
-<button
-    class="button"
-    onclick="window.uiRenderError(undefined,&quot;modeConfirm&quot;);"
->ok</button>
+<button class="button" id="buttonOk1">ok</button>
             `)
+        );
+        document.querySelector("#buttonOk1").addEventListener(
+            "click",
+            uiRenderError.bind(undefined, undefined, "modeConfirm")
         );
         uiLoaderInfo = noop;
         return new Promise(function (ignore, reject) {
@@ -1753,7 +1754,7 @@ TO
     sqlPostMessage({
         action: "open"
     });
-    document.querySelector("#dbExec1").onclick = onDbExec;
+    document.querySelector("#dbExec1").addEventListener("click", onDbExec);
     // init sqlEditor
     sqlEditor = CodeMirror.fromTextArea(document.querySelector(
         "#editor1 textarea"

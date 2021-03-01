@@ -11,9 +11,9 @@
 ![screenshot.sqlchart.contextmenu.table.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.contextmenu.table.png)
 ![screenshot.sqlchart.modal.clone.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.modal.clone.png)
 
-#### changelog 2021.2.28
-- update #sqlResultMeta1 with chart-description
-- rename query sqlDb to sqlFile
+#### changelog 2021.3.1
+- fix chrome-extension bug - replace onclick with addEventListener("click")
+- update manifest.json - enable flag offline_enabled
 - none
 
 #### todo
