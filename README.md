@@ -11,10 +11,11 @@
 ![screenshot.sqlchart.contextmenu.table.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.contextmenu.table.png)
 ![screenshot.sqlchart.modal.clone.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.modal.clone.png)
 
-#### changelog 2021.3.1
-- fix chrome-extension bug - replace onclick with addEventListener("click")
-- update manifest.json - enable flag offline_enabled
+#### changelog 2021.3.2
+- make chart-lines more visible
 - none
 
 #### todo
+- remove github fork-banner in chrome-extension
+- allow downloading chart datapoints as csv
 - none

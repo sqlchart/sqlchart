@@ -911,12 +911,12 @@ Definition of the CSV Format
                     if (label0 !== label) {
                         data = [];
                         datasets.push({
-                            borderWidth: 0,
+                            borderWidth: 1.5,
                             data,
                             fill: false,
                             label,
                             lineTension: 0,
-                            pointRadius: 0
+                            pointRadius: 0.5
                         });
                         label0 = label;
                     }
