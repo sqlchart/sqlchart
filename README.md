@@ -11,8 +11,9 @@
 ![screenshot.sqlchart.contextmenu.table.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.contextmenu.table.png)
 ![screenshot.sqlchart.modal.clone.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.modal.clone.png)
 
-#### changelog 2021.3.2
-- make chart-lines more visible
+#### changelog 2021.3.9
+- update sql.js with json1 support
+- update spa.sqlchart.js with rowcount for result-tables
 - none
 
 #### todo

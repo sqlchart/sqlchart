@@ -3,12 +3,12 @@ shRawLibFetch
 {
     "fetchList": [
         {
-            "sh": "curl -o assets.sqljs-v1.4.0.wasm https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.4.0/dist/sql-wasm-debug.wasm",
+            "sh": "curl -o assets.sqljs-v1.4.0.wasm https://raw.githubusercontent.com/kaizhu256/sql.js/v1.4.0.json1.dist/dist/sql-wasm-debug.wasm",
             "url": "https://github.com/sql-js/sql.js/tree/v1.4.0/dist/sql-wasm-debug.wasm"
         },
         {
             "url": "https://github.com/sql-js/sql.js/tree/v1.4.0/dist/worker.sql-wasm-debug.js",
-            "url2": "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.4.0/dist/worker.sql-wasm-debug.js"
+            "url2": "https://raw.githubusercontent.com/kaizhu256/sql.js/v1.4.0.json1.dist/dist/worker.sql-wasm-debug.js"
         }
     ]
 }
@@ -46,7 +46,7 @@ shRawLibFetch
 
 /*
 repo https://github.com/sql-js/sql.js/tree/v1.4.0
-committed 2020-10-19T19:34:46Z
+committed 2020-10-11T20:18:23Z
 */
 
 
@@ -173,8 +173,9 @@ var Module = typeof Module !== 'undefined' ? Module : {};
 "use strict";
 
 /**
- * @typedef {{Database:Database}} SqlJs
- * @property {Database} Database the database constructor
+ * @typedef {{Database:Database, Statement:Statement}} SqlJs
+ * @property {Database} Database A class that represents an SQLite database
+ * @property {Statement} Statement The prepared statement class
  */
 
 /**
@@ -388,8 +389,13 @@ Module["onRuntimeInitialized"] = function onRuntimeInitialized() {
     * You can't instantiate this class directly, you have to use a
     * {@link Database} object in order to create a statement.
     *
-    * **Warning**: When you close a database (using db.close()),
-    * all its statements are closed too and become unusable.
+    * **Warnings**
+    * 1. When you close a database (using db.close()), all
+    * its statements are closed too and become unusable.
+    * 1. After calling db.prepare() you must manually free the assigned memory
+    * by calling Statement.free(). Failure to do this will cause subsequent
+    * 'DROP TABLE ...' statements to fail with 'Uncaught Error: database table
+    * is locked'.
     *
     * Statements can't be created by the API user directly, only by
     * Database::prepare
@@ -1167,9 +1173,8 @@ Module["onRuntimeInitialized"] = function onRuntimeInitialized() {
      * @example <caption>Get the results of multiple SQL queries</caption>
      * const sql_queries = "SELECT 1 AS x; SELECT '2' as y";
      * for (const statement of db.iterateStatements(sql_queries)) {
-     *     statement.step(); // Execute the statement
      *     const sql = statement.getSQL(); // Get the SQL source
-     *     const result = statement.getAsObject(); // Get the row of data
+     *     const result = statement.getAsObject({}); // Get the row of data
      *     console.log(sql, result);
      * }
      * // This will print:
@@ -2429,9 +2434,9 @@ function updateGlobalBufferAndViews(buf) {
   Module['HEAPF64'] = HEAPF64 = new Float64Array(buf);
 }
 
-var STACK_BASE = 5307792,
+var STACK_BASE = 5309232,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 64912;
+    STACK_MAX = 66352;
 
 assert(STACK_BASE % 16 === 0, 'stack must start aligned');
 

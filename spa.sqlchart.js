@@ -661,7 +661,9 @@ Definition of the CSV Format
                 colList,
                 description,
                 hashtag,
-                rowcount,
+                rowcount = (
+                    table.rowList && table.rowList.length
+                ),
                 t_name,
                 t_sql = "",
                 t_type,
@@ -933,7 +935,7 @@ Definition of the CSV Format
             }
         }));
         elem.querySelector("canvas").style.height = (
-            (12 * datasets.length + 400) +
+            (10 * datasets.length + 400) +
             "px"
         );
         chart = new Chart(elem.querySelector("canvas"), {
