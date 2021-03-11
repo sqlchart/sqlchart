@@ -22,8 +22,8 @@ a:hover {
     text-decoration: none;
 }
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-family: Verdana, Helvetica, sans-serif;
+    font-size: 11px;
 }
 code,
 pre,
@@ -199,15 +199,18 @@ table tbody tr td,
     cursor: pointer;
     font-weight: normal;
 }
-#panelSidebar1 #tableDb1 tbody tr {
+#panelSidebar1 table tbody .trButton {
     border: 0;
 }
-#panelSidebar1 #tableDb1 tbody tr td {
+#panelSidebar1 table tbody .trButton td {
     padding: 0;
 }
-#panelSidebar1 #tableDb1 tbody tr td button {
+#panelSidebar1 table tbody .trButton td button {
     text-align: left;
     width: 100%;
+}
+#panelSidebar1 table tbody .trButton td:nth-child(2) {
+    padding-left: 0;
 }
 @keyframes loaderSpin {
     0% {
@@ -258,6 +261,13 @@ a:hover,
 #panelContent1 canvas,
 #panelContent1 .CodeMirror {
     border: 1px solid #bbb;
+}
+#panelContent1 canvas {
+    max-height: 600px;
+}
+#panelContent1 .chartResetZoom {
+    left: 4px;
+    top: -24px;
 }
 #panelContent1 .dataTable tbody {
     color: #037;
@@ -328,14 +338,18 @@ style="
     </div>
 </div>
 <div style="display: none;">
-    <input id="dbFile1" type="file">
-    <input id="csvFile1" type="file">
+    <input id="fileOpenCsv2" type="file">
+    <input id="fileOpenDb2" type="file">
+    <input id="fileOpenScript2" type="file">
     <table id="uiLoader1"><thead><tr><th></th></tr></thead></table>
 </div>
 <div id="contextmenu1" style="display: none;">
     <table>
     <thead><tr><th colspan="2">crud action</th></tr></thead>
     <tbody>
+    <tr data-t_type="editor" data-crud="none">
+        <td></td><td></td>
+    </tr>
     <tr data-t_type="index" data-crud="rename">
         <td></td><td></td>
     </tr>
@@ -386,53 +400,79 @@ style="
     </table>
 </div> <!-- #contextmenu1 -->
 <div id="panelSidebar1">
-    <div>database</div>
-    <table id="tableDb1">
+    <div>sqlite database</div>
+    <table>
     <tbody>
-    <tr>
+    <tr class="trButton">
         <td>D</td>
-        <td><button class="button" id="dbRefresh1">database - refresh</button></td>
-    </tr>
-    <tr>
-        <td>D</td>
-        <td><button class="button" id="dbSave1">database - save</button></td>
-    </tr>
-    <tr>
-        <td>D</td>
-        <td><button class="button" id="dbOpen1">database - open</button></td>
-    </tr>
-    <tr>
-        <td>T</td>
         <td>
-            <button class="button" id="dbTableCreate1">table - create</button>
+        <button class="button" id="dbRefresh1">database - refresh</button>
         </td>
     </tr>
-    <tr>
+    <tr class="trButton">
+        <td>D</td>
+        <td>
+        <button class="button" id="fileOpenDb1">database - open</button>
+        </td>
+    </tr>
+    <tr class="trButton">
+        <td>D</td>
+        <td>
+        <button class="button" id="dbSave1">database - save</button>
+        </td>
+    </tr>
+    <tr class="trButton">
         <td>C</td>
-        <td><button class="button" id="csvOpen1">csv - open</button></td>
+        <td>
+        <button class="button" id="fileOpenCsv1">csv - open</button>
+        </td>
+    </tr>
+    <tr class="trButton">
+        <td>T</td>
+        <td>
+        <button class="button" id="dbTableCreate1">table - create</button>
+        </td>
     </tr>
     </tbody>
     </table>
-    <div>sql editor</div>
+    <div>sqlite script</div>
     <table>
     <tbody>
+    <tr class="trButton">
+        <td>S</td>
+        <td>
+        <button class="button" id="fileOpenScript1">script - open</button>
+        </td>
+    </tr>
+    <tr class="trButton">
+        <td>S</td>
+        <td>
+        <button class="button" id="scriptSave1">script - save</button>
+        </td>
+    </tr>
+    <tr class="trButton">
+        <td>S</td>
+        <td>
+        <button class="button" id="dbExec1">script - execute</button>
+        </td>
+    </tr>
     <tr
         data-hashtag="editor1"
         data-t_type="editor"
-        title="{ &quot;description&quot;: &quot;sql editor&quot; }">
-        <td>E</td>
-        <td>sql editor</td>
+        title="{ &quot;description&quot;: &quot;script editor&quot; }">
+        <td>S</td>
+        <td>script editor</td>
     </tr>
     </tbody>
     </table>
-    <div>query results</div>
+    <div>sqlite query results</div>
     <table id="sqlResultMeta1"><tbody></tbody></table>
-    <div>tables and indices</div>
+    <div>sqlite tables and indices</div>
     <table id="sqlResultMeta2"><tbody></tbody></table>
 </div> <!-- #panelSidebar1 -->
 <div id="panelContent1">
     <div id="editor1">
-    <div class="title">sql editor</div>
+    <div class="title">script editor</div>
     <textarea>
 -- visualize stock-data
 DROP TABLE IF EXISTS stock_historical;
@@ -715,7 +755,7 @@ SELECT * FROM (VALUES
     );
 SELECT * FROM enron_email_fts;
 </textarea>
-    <button class="button" id="dbExec1">sql editor - execute</button>
+    <button class="button" id="dbExec2">script - execute</button>
     </div> <!-- #editor1 -->
     <div id="sqlResultData1"></div>
     <div id="sqlResultData2"></div>

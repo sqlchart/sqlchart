@@ -948,6 +948,11 @@ Definition of the CSV Format
                     duration: 0
                 },
                 maintainAspectRatio: false,
+                legend: {
+                    labels: {
+                        fontSize: 10
+                    }
+                },
                 plugins: {
                     zoom: {
                         zoom: {
@@ -981,10 +986,6 @@ Definition of the CSV Format
                             }
                         }
                     ]
-                },
-                title: {
-                    display: true,
-                    text: ""
                 },
                 tooltips: {
                     intersect: false,
@@ -1175,73 +1176,6 @@ Definition of the CSV Format
         elemCm.style.display = "block";
     }
 
-    async function onCsvOpen({
-        target
-    }) {
-    /*
-     * this function will open csv-file and load into db
-     */
-        let colList;
-        let rowList;
-        let set;
-        if (target.type !== "file") {
-            document.querySelector("#csvFile1").value = "";
-            document.querySelector("#csvFile1").click();
-            return;
-        }
-        // if (target.files.length === 0) {
-        //     return;
-        // }
-        uiLoaderStart({});
-        rowList = await target.files[0].text();
-        rowList = jsonRowListFromCsv({
-            csv: rowList
-        });
-        set = new Set();
-        colList = rowList.shift().map(function (col) {
-            let col2;
-            let ii;
-            ii = 0;
-            // sanitize col
-            col = stringSqlnameSafe(col);
-            // ensure unique col2
-            col2 = col;
-            while (true) {
-                if (!set.has(col2)) {
-                    set.add(col2);
-                    return col2;
-                }
-                ii += 1;
-                col2 = col + ii;
-            }
-        }).join(" TEXT NOT NULL DEFAULT '',\n") + " TEXT NOT NULL DEFAULT ''\n";
-        rowList = "('" + rowList.map(function (row) {
-            return row.join("\r");
-        }).join("\n").replace((
-            /'/g
-        ), "''").replace((
-            /\r/g
-        ), "','").replace((
-            /\n/g
-        ), "'),\n('") + "');\n";
-        sqlPostMessage({
-            sql: (`
-BEGIN TRANSACTION;
-DROP TABLE IF EXISTS tmp1;
-CREATE TEMP TABLE tmp1 (
-${colList}
-);
-INSERT INTO tmp1 VALUES
-${rowList}
-DROP TABLE IF EXISTS tmp_csv1;
-CREATE TABLE tmp_csv1 AS SELECT * FROM tmp1;
-DROP TABLE tmp1;
-COMMIT;
-            `)
-        });
-        onDbRefresh({});
-    }
-
     async function onDbExec({
         data,
         sql
@@ -1256,10 +1190,10 @@ COMMIT;
             modeForce: true
         });
         uiLoaderStart({
-            msg: "sql editor - execute",
+            msg: "script editor - execute",
             modeForce: true
         });
-        sql = sql || sqlEditor.getValue() + ";";
+        sql = sql || sqlEditor.getValue();
         try {
             data = await sqlPostMessage({
                 action: "exec",
@@ -1273,29 +1207,6 @@ COMMIT;
         await uiRenderSqlResultIi({
             sqlResultIi: 1,
             tableList: data.tableList
-        });
-        onDbRefresh({});
-    }
-
-    async function onDbOpen({
-        target
-    }) {
-    /*
-     * this function will open db from file
-     */
-        if (target.type !== "file") {
-            document.querySelector("#dbFile1").value = "";
-            document.querySelector("#dbFile1").click();
-            return;
-        }
-        if (target.files.length === 0) {
-            return;
-        }
-        await sqlPostMessage({
-            action: "open",
-            data: (
-                await target.files[0].arrayBuffer()
-            )
         });
         onDbRefresh({});
     }
@@ -1394,7 +1305,7 @@ ORDER BY tbl_name, type DESC, name;
     async function onDbSave({
         data,
         elem,
-        file = "sql-db.sqlite"
+        file = "sqlite-database.sqlite"
     }) {
     /*
      * this function will save db to file
@@ -1417,7 +1328,12 @@ ORDER BY tbl_name, type DESC, name;
         setTimeout(function () {
             URL.revokeObjectURL(elem.href);
         }, 30000);
-        elem.download = file.replace(".", "-" + new Date().toISOString() + ".");
+        elem.download = file.replace(
+            ".",
+            "-" + new Date().toISOString().slice(0, 19).replace((
+                /[\-:T]/g
+            ), "") + "."
+        );
         uiLoaderEnd({});
         elem.click();
     }
@@ -1505,6 +1421,8 @@ ORDER BY tbl_name, type DESC, name;
         crud = t_type + " - " + crud;
         tmp = Math.random().toString(16).slice(2);
         switch (crud) {
+        case "editor - none":
+            return;
         case "result - save to csv":
             data = jsonRowListToCsv({
                 colList,
@@ -1512,7 +1430,7 @@ ORDER BY tbl_name, type DESC, name;
             });
             await onDbSave({
                 data,
-                file: "sql-result.csv"
+                file: "sqlite-result.csv"
             });
             return;
         case "table - save to csv":
@@ -1522,7 +1440,7 @@ ORDER BY tbl_name, type DESC, name;
             data = jsonRowListToCsv(data.tableList[0]);
             await onDbSave({
                 data,
-                file: "sql-table.csv"
+                file: "sqlite-table.csv"
             });
             return;
         }
@@ -1738,6 +1656,107 @@ TO
         });
     });
 
+    async function onFileOpen({
+        colList,
+        currentTarget,
+        rowList,
+        set
+    }) {
+    /*
+     * this function will open db from file
+     */
+        switch (currentTarget.id) {
+        case "fileOpenCsv1":
+            document.querySelector("#fileOpenCsv2").value = "";
+            document.querySelector("#fileOpenCsv2").click();
+            return;
+        case "fileOpenDb1":
+            document.querySelector("#fileOpenDb2").value = "";
+            document.querySelector("#fileOpenDb2").click();
+            return;
+        case "fileOpenScript1":
+            document.querySelector("#fileOpenScript2").value = "";
+            document.querySelector("#fileOpenScript2").click();
+            return;
+        }
+        switch (currentTarget.id) {
+        case "fileOpenCsv2":
+            uiLoaderStart({});
+            rowList = await currentTarget.files[0].text();
+            rowList = jsonRowListFromCsv({
+                csv: rowList
+            });
+            set = new Set();
+            colList = rowList.shift().map(function (col) {
+                let col2;
+                let ii;
+                ii = 0;
+                // sanitize col
+                col = stringSqlnameSafe(col);
+                // ensure unique col2
+                col2 = col;
+                while (true) {
+                    if (!set.has(col2)) {
+                        set.add(col2);
+                        return col2;
+                    }
+                    ii += 1;
+                    col2 = col + ii;
+                }
+            }).join(
+                " TEXT NOT NULL DEFAULT '',\n"
+            ) + " TEXT NOT NULL DEFAULT ''\n";
+            rowList = "('" + rowList.map(function (row) {
+                return row.join("\r");
+            }).join("\n").replace((
+                /'/g
+            ), "''").replace((
+                /\r/g
+            ), "','").replace((
+                /\n/g
+            ), "'),\n('") + "');\n";
+            try {
+                await sqlPostMessage({
+                    sql: (`
+BEGIN TRANSACTION;
+DROP TABLE IF EXISTS __csv1__;
+CREATE TABLE __csv1__ (
+${colList}
+);
+INSERT INTO __csv1__ VALUES
+${rowList}
+COMMIT;
+                    `)
+                });
+            } catch (errCaught) {
+                await sqlPostMessage({
+                    sql: "ROLLBACK;\n"
+                });
+                assertOrThrow(undefined, errCaught);
+            }
+            onDbRefresh({});
+            return;
+        case "fileOpenDb2":
+            if (currentTarget.files.length === 0) {
+                return;
+            }
+            await sqlPostMessage({
+                action: "open",
+                data: (
+                    await currentTarget.files[0].arrayBuffer()
+                )
+            });
+            onDbRefresh({});
+            return;
+        case "fileOpenScript2":
+            uiLoaderStart({});
+            currentTarget = await currentTarget.files[0].text();
+            sqlEditor.setValue(currentTarget);
+            onDbRefresh({});
+            return;
+        }
+    }
+
     // init $
     $.prototype.datatable = $.prototype.DataTable;
     // init uiLoaderInfo
@@ -1756,7 +1775,6 @@ TO
     sqlPostMessage({
         action: "open"
     });
-    document.querySelector("#dbExec1").addEventListener("click", onDbExec);
     // init sqlEditor
     sqlEditor = CodeMirror.fromTextArea(document.querySelector(
         "#editor1 textarea"
@@ -1778,16 +1796,10 @@ TO
     // init evt-handling
     [
         [
-            "#csvFile1", "change", onCsvOpen
+            "#dbExec1", "click", onDbExec
         ],
         [
-            "#csvOpen1", "click", onCsvOpen
-        ],
-        [
-            "#dbFile1", "change", onDbOpen
-        ],
-        [
-            "#dbOpen1", "click", onDbOpen
+            "#dbExec2", "click", onDbExec
         ],
         [
             "#dbRefresh1", "click", onDbRefresh
@@ -1800,6 +1812,32 @@ TO
                 crud: "create",
                 t_type: "table"
             })
+        ],
+        [
+            "#fileOpenCsv2", "change", onFileOpen
+        ],
+        [
+            "#fileOpenCsv1", "click", onFileOpen
+        ],
+        [
+            "#fileOpenDb2", "change", onFileOpen
+        ],
+        [
+            "#fileOpenDb1", "click", onFileOpen
+        ],
+        [
+            "#fileOpenScript2", "change", onFileOpen
+        ],
+        [
+            "#fileOpenScript1", "click", onFileOpen
+        ],
+        [
+            "#scriptSave1", "click", function () {
+                onDbSave({
+                    data: sqlEditor.getValue(),
+                    file: "sqlite-script.txt"
+                });
+            }
         ],
         [
             "body", "click", onContextmenu
@@ -1832,11 +1870,11 @@ TO
         uiLoaderInfo,
         uiRenderError
     });
-    // init sqlFile
+    // init sqlDb
     await(async function () {
         let data;
         data = (
-            /\bsqlFile=([^&]+)/
+            /\bsqlDb=([^&]+)/
         ).exec(location.search);
         if (!data) {
             return;
