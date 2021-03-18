@@ -11,11 +11,8 @@
 ![screenshot.sqlchart.contextmenu.table.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.contextmenu.table.png)
 ![screenshot.sqlchart.modal.clone.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.modal.clone.png)
 
-#### changelog 2021.3.10
-- add buttons editor-open, editor-save
-- add rollback for failed csv-import
-- limit chart-height to 600px
-- rename query sqlFile to sqlDb
+#### changelog 2021.3.17
+- css - darken canvas-background so light-colored plots are more visible
 - none
 
 #### todo

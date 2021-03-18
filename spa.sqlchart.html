@@ -98,9 +98,7 @@ table tbody tr td,
 }
 #datatables_buttons_info .loader {
     animation: loaderSpin 2s linear infinite;
-    border: 10px solid #dde;
     border-radius: 50% !important;
-    border-top: 10px solid #37f;
     height: 50px;
     left: 50%;
     top: 50%;
@@ -127,6 +125,9 @@ table tbody tr td,
 #panelContent1 {
     padding: 0 20px 10px 220px;
 }
+#panelContent1 canvas {
+    max-height: 600px;
+}
 #panelContent1 .CodeMirror {
     height: 400px;
     margin-bottom: 5px;
@@ -134,6 +135,10 @@ table tbody tr td,
 #panelContent1 .CodeMirror-scroll {
     overflow-x: auto;
     overflow-y: hidden;
+}
+#panelContent1 .chartResetZoom {
+    left: 4px;
+    top: -24px;
 }
 #panelContent1 .dataTable {
     margin: 0;
@@ -258,16 +263,16 @@ a:hover,
     background: #dde;
     border-right: 10px solid #fff;
 }
+#datatables_buttons_info .loader {
+    border: 10px solid #dde;
+    border-top: 10px solid #37f;
+}
 #panelContent1 canvas,
 #panelContent1 .CodeMirror {
     border: 1px solid #bbb;
 }
 #panelContent1 canvas {
-    max-height: 600px;
-}
-#panelContent1 .chartResetZoom {
-    left: 4px;
-    top: -24px;
+    background: #dde;
 }
 #panelContent1 .dataTable tbody {
     color: #037;
