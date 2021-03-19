@@ -935,7 +935,7 @@ Definition of the CSV Format
             }
         }));
         elem.querySelector("canvas").style.height = (
-            (10 * datasets.length + 400) +
+            (8 * datasets.length + 400) +
             "px"
         );
         chart = new Chart(elem.querySelector("canvas"), {
@@ -954,10 +954,14 @@ Definition of the CSV Format
                     }
                 },
                 plugins: {
+                    colorschemes: {
+                        scheme: "tableau.Tableau20"
+                    },
                     zoom: {
                         zoom: {
                             drag: {
-                                animationDuration: 500
+                                animationDuration: 500,
+                                backgroundColor: "rgba(127,127,127,0.5)"
                             },
                             enabled: true,
                             mode: "x"

@@ -25,6 +25,17 @@ body {
     font-family: Verdana, Helvetica, sans-serif;
     font-size: 11px;
 }
+button,
+button:focus,
+button:hover,
+.button,
+.button:focus,
+.button:hover {
+    border-radius: 2px;
+    height: 20px;
+    line-height: 0;
+    min-width: 50px;
+}
 code,
 pre,
 textarea,
@@ -45,15 +56,7 @@ table tbody tr td,
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.button,
-.button:focus,
-.button:hover {
-    border-radius: 3px;
-    height: 20px;
-    min-width: 50px;
-}
 #contextmenu1 {
-    border: 1px solid;
     position: fixed;
     z-index: 99;
 }
@@ -137,15 +140,14 @@ table tbody tr td,
     overflow-y: hidden;
 }
 #panelContent1 .chartResetZoom {
-    left: 4px;
-    top: -24px;
+    left: 3px;
+    top: -23px;
 }
 #panelContent1 .dataTable {
     margin: 0;
 }
 #panelContent1 .dataTable tbody tr td,
 #panelContent1 .dataTable thead tr th {
-    border: 0;
     max-width: 400px;
     padding-right: 15px;
 }
@@ -204,13 +206,11 @@ table tbody tr td,
     cursor: pointer;
     font-weight: normal;
 }
-#panelSidebar1 table tbody .trButton {
-    border: 0;
-}
 #panelSidebar1 table tbody .trButton td {
     padding: 0;
 }
 #panelSidebar1 table tbody .trButton td button {
+    padding-left: 4px;
     text-align: left;
     width: 100%;
 }
@@ -232,21 +232,26 @@ a:hover,
 #panelSidebar1 table tbody tr[data-hashtag] {
     color: #37f;
 }
+button,
+button:focus,
+button:hover,
 .button,
 .button:focus,
 .button:hover {
+    background: #eee;
     border: 1px solid #999;
 }
+button:hover,
 .button:hover,
 #contextmenu1 tbody tr[data-crud]:hover,
 #panelContent1 .dataTable tbody tr:hover,
 #panelContent1 .title:hover,
 #panelSidebar1 tbody tr[data-hashtag]:hover {
-    background: #dde !important;
-    box-shadow: 0 0 1px #000;
+    background: #cce !important;
 }
 #contextmenu1 {
     background: #fff;
+    border: 1px solid #999;
 }
 #contextmenu1 table tbody tr,
 #contextmenu1 table thead tr th,
@@ -257,22 +262,23 @@ a:hover,
     border-bottom: 1px solid #bbb;
 }
 #datatables_buttons_info {
-    border: 1px solid #777;
+    border: 1px solid #999;
 }
 #datatables_buttons_info table tbody tr td span {
-    background: #dde;
+    background: #cce;
     border-right: 10px solid #fff;
 }
 #datatables_buttons_info .loader {
-    border: 10px solid #dde;
+    border: 10px solid #cce;
     border-top: 10px solid #37f;
 }
 #panelContent1 canvas,
 #panelContent1 .CodeMirror {
     border: 1px solid #bbb;
+    border-top: 0 solid #000;
 }
 #panelContent1 canvas {
-    background: #dde;
+    background: #eee;
 }
 #panelContent1 .dataTable tbody {
     color: #037;
@@ -280,11 +286,15 @@ a:hover,
 #panelContent1 .dataTable tbody tr {
     background: transparent;
 }
+#panelContent1 .dataTable tbody tr td,
+#panelContent1 .dataTable thead tr th {
+    border: 0 solid #000;
+}
 #panelContent1 .dataTable thead tr th {
     border-right: 1px solid #bbb;
 }
 #panelContent1 .dataTables_info {
-    color: #777;
+    color: #999;
 }
 #panelContent1 .dataTables_scrollBody {
     background: #eee;
@@ -295,17 +305,27 @@ a:hover,
     border-right: 1px solid #bbb !important;
 }
 #panelContent1 .title {
-    background: #dde;
+    background: #cce;
     border: 1px solid #bbb;
 }
 #panelSidebar1 {
-    border-right: 1px solid #777;
+    border-right: 1px solid #999;
+}
+#panelSidebar1 table {
+    border-bottom: 1px solid #bbb;
 }
 #panelSidebar1 table tbody tr td:nth-child(1) {
-    background: #dde;
+    background: #cce;
 }
 #panelSidebar1 table tbody tr[data-t_type=index] td:nth-child(1) {
     background: #eef;
+}
+#panelSidebar1 table tbody .trButton {
+    background: #bbb;
+    border: 0 solid #000;
+}
+#panelSidebar1 table tbody .trButton td button {
+    border-right: 0 solid #000;
 }
 </style>
 </head>
@@ -464,9 +484,9 @@ style="
     <tr
         data-hashtag="editor1"
         data-t_type="editor"
-        title="{ &quot;description&quot;: &quot;script editor&quot; }">
-        <td>S</td>
-        <td>script editor</td>
+        title="{ &quot;description&quot;: &quot;editor&quot; }">
+        <td>E</td>
+        <td>editor</td>
     </tr>
     </tbody>
     </table>
@@ -477,7 +497,7 @@ style="
 </div> <!-- #panelSidebar1 -->
 <div id="panelContent1">
     <div id="editor1">
-    <div class="title">script editor</div>
+    <div class="title">editor</div>
     <textarea>
 -- visualize stock-data
 DROP TABLE IF EXISTS stock_historical;
