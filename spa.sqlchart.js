@@ -559,6 +559,7 @@ Definition of the CSV Format
         } catch (ignore) {
             return;
         }
+        location.hash = "undefined";
         location.hash = hashtag || "";
     }
 
@@ -880,6 +881,8 @@ Definition of the CSV Format
             key, sql
         ]) {
             let data;
+            let ii;
+            ii = 0;
             switch (key) {
             case "x":
             case "xy":
@@ -912,11 +915,12 @@ Definition of the CSV Format
                 ]) {
                     if (label0 !== label) {
                         data = [];
+                        ii += 1;
                         datasets.push({
                             borderWidth: 1.5,
                             data,
                             fill: false,
-                            label,
+                            label: ii + ". " + label,
                             lineTension: 0,
                             pointRadius: 0.5
                         });
@@ -934,10 +938,6 @@ Definition of the CSV Format
                 break;
             }
         }));
-        elem.querySelector("canvas").style.height = (
-            (8 * datasets.length + 400) +
-            "px"
-        );
         chart = new Chart(elem.querySelector("canvas"), {
             data: {
                 datasets,
@@ -949,14 +949,14 @@ Definition of the CSV Format
                 },
                 maintainAspectRatio: false,
                 legend: {
+                    align: "start",
                     labels: {
-                        fontSize: 10
+                        boxWidth: 15,
+                        fontSize: 10,
+                        padding: 5
                     }
                 },
                 plugins: {
-                    colorschemes: {
-                        scheme: "tableau.Tableau20"
-                    },
                     zoom: {
                         zoom: {
                             drag: {
@@ -993,9 +993,73 @@ Definition of the CSV Format
                 },
                 tooltips: {
                     intersect: false,
-                    mode: "index"
+                    mode: "nearest"
                 }
             },
+            plugins: [
+                {
+                    // column-align legend
+                    beforeInit: function ({
+                        legend
+                    }) {
+                        legend.afterFit = function () {
+                            let {
+                                lineWidths,
+                                maxWidth
+                            } = legend;
+                            legend.height += 5;
+                            if (legend.lineWidths.length < 2) {
+                                legend.legendItemWidth = 0;
+                                return;
+                            }
+                            lineWidths.forEach(function (ii) {
+                                lineWidths[ii] = maxWidth;
+                            });
+                        };
+                        legend.beforeFit = function () {
+                            let {
+                                ctx,
+                                legendItems,
+                                maxWidth,
+                                padding = 5,
+                                textWidth
+                            } = legend;
+                            if (legendItems.length < 3) {
+                                return;
+                            }
+                            // column-align legend by max-textWidth
+                            textWidth = 1;
+                            Object.values(legendItems).forEach(function ({
+                                text
+                            }) {
+                                textWidth = Math.max(
+                                    textWidth,
+                                    ctx.measureText(text).width
+                                );
+                            });
+                            // column-align legend by max-lines
+                            textWidth = Math.min(
+                                textWidth,
+                                Math.floor(
+                                    (maxWidth - padding) / Math.ceil(
+                                        Object.keys(legendItems).length / 8
+                                    ) - padding
+                                )
+                            );
+                            Object.values(legendItems).forEach(function (elem) {
+                                while (
+                                    elem.text.length > 1 &&
+                                    ctx.measureText(elem.text).width >=
+                                    textWidth + 2 * padding
+                                ) {
+                                    elem.text = elem.text.slice(0, -1);
+                                }
+                            });
+                            legend.legendItemWidth = textWidth;
+                        };
+                    }
+                }
+            ],
             type: chartType
         });
         // init resetZoom
@@ -1763,6 +1827,53 @@ COMMIT;
 
     // init $
     $.prototype.datatable = $.prototype.DataTable;
+    // init Chart.defaults.global.plugins.colorschemes
+    // https://nagix.github.io/chartjs-plugin-colorschemes/colorchart.html
+    Chart.defaults.global.plugins.colorschemes = {
+        fillAlpha: 0.5,
+        override: false,
+        reverse: false,
+        // scheme: 'brewer.Paired12'
+        "brewer.Paired10": [
+            "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c",
+            "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00",
+            "#cab2d6", "#6a3d9a"
+        ],
+        "brewer.Paired12": [
+            "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c",
+            "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00",
+            "#cab2d6", "#6a3d9a", "#ffff99", "#b15928"
+        ],
+        "highcharts": [
+            "#4572a7", "#aa4643", "#89a54e", "#80699b",
+            "#3d96ae", "#db843d", "#92a8cd", "#a47d7c",
+            "#b5ca92"
+        ],
+        "tableau.Tableau20": [
+            "#4e79a7", "#a0cbe8", "#f28e2b", "#ffbe7d",
+            "#59a14f", "#8cd17d", "#b6992d", "#f1ce63",
+            "#499894", "#86bcb6", "#e15759", "#ff9d9a",
+            "#79706e", "#bab0ac", "#d37295", "#fabfd2",
+            "#b07aa1", "#d4a6c8", "#9d7660", "#d7b5a6"
+        ],
+        scheme: Array.from([
+            "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c",
+            "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00",
+            "#cab2d6", "#6a3d9a", "#d2b48c", "#b15928"
+        ]).map(function (rgb, ii) {
+            return "#" + Array.from([
+                rgb.slice(1, 3),
+                rgb.slice(3, 5),
+                rgb.slice(5, 7)
+            ]).map(function (elem) {
+                elem = Number("0x" + elem);
+                if (ii % 2 === 0) {
+                    elem *= 0.75;
+                }
+                return Math.round(elem).toString(16).padStart(2, "0");
+            }).join("");
+        })
+    };
     // init uiLoaderInfo
     uiLoaderInfo = $("#uiLoader1").datatable({
         dom: ""

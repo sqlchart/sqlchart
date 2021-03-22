@@ -11,8 +11,8 @@
 ![screenshot.sqlchart.contextmenu.table.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.contextmenu.table.png)
 ![screenshot.sqlchart.modal.clone.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.modal.clone.png)
 
-#### changelog 2021.3.18
-- update css
+#### changelog 2021.3.21
+- column-align legend
 - none
 
 #### todo

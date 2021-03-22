@@ -129,7 +129,7 @@ table tbody tr td,
     padding: 0 20px 10px 220px;
 }
 #panelContent1 canvas {
-    max-height: 600px;
+    height: 300px;
 }
 #panelContent1 .CodeMirror {
     height: 400px;
@@ -161,7 +161,7 @@ table tbody tr td,
     display: none !important;
 }
 #panelContent1 .sqlResultData {
-    margin-top: 50px;
+    margin-top: 30px;
 }
 #panelContent1 .sqlResultData .chartContainer {
     display: none;
@@ -171,11 +171,14 @@ table tbody tr td,
     position: absolute;
 }
 #panelContent1 .sqlResultData[data-t_type=index] {
-    margin-top: 0;
+    display: none;
+    /* margin-top: 0; */
 }
+/*
 #panelContent1 .sqlResultData[data-t_type=index] .title {
     text-align: left;
 }
+*/
 #panelContent1 .title {
     margin: 0;
     padding: 5px;

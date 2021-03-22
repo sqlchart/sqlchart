@@ -38,6 +38,15 @@ shRawLibFetch
         }
     ]
 }
+-				var width = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
++				// hack-chartjs - column-align legend
++				var width = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
++				width = me.legendItemWidth || width;
+
+-			var width = boxWidth + (fontSize / 2) + textWidth;
++			// hack-chartjs - column-align legend
++			var width = boxWidth + (fontSize / 2) + textWidth;
++			width = me.legendItemWidth || width;
 */
 
 
@@ -49708,7 +49717,9 @@ var Legend = core_element.extend({
 
 			helpers$1.each(me.legendItems, function(legendItem, i) {
 				var boxWidth = getBoxWidth(labelOpts, fontSize);
+				// hack-chartjs - column-align legend
 				var width = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
+				width = me.legendItemWidth || width;
 
 				if (i === 0 || lineWidths[lineWidths.length - 1] + width + 2 * labelOpts.padding > minSize.width) {
 					totalHeight += fontSize + labelOpts.padding;
@@ -49904,7 +49915,9 @@ var Legend = core_element.extend({
 		var itemHeight = fontSize + labelOpts.padding;
 		helpers$1.each(me.legendItems, function(legendItem, i) {
 			var textWidth = ctx.measureText(legendItem.text).width;
+			// hack-chartjs - column-align legend
 			var width = boxWidth + (fontSize / 2) + textWidth;
+			width = me.legendItemWidth || width;
 			var x = cursor.x;
 			var y = cursor.y;
 
