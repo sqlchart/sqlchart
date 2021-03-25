@@ -8,13 +8,16 @@ window.addEventListener("load", async function () {
         CodeMirror,
         blobDownload,
         contextmenuDataset,
+        jsScript0,
         onDbCrud,
         onDbRefresh,
         sqlCallbackDict,
         sqlCallbackId,
+        sqlDb0,
         sqlEditor,
         sqlPostMessage,
         sqlResultDict,
+        sqlScript0,
         sqlWorker,
         uiLoaderInfo,
         uiLoaderInfo0,
@@ -674,7 +677,7 @@ Definition of the CSV Format
             t_type = t_type || "result";
             description = (
                 t_type === "index"
-                ? "  I" + (ii + 1) + " - " + tbl_name + " . " + t_name
+                ? "I" + (ii + 1) + " - " + tbl_name + "." + t_name
                 : t_type === "table"
                 ? "T" + (ii + 1) + " - " + t_name
                 : "R" + (ii + 1) + " - result"
@@ -1808,6 +1811,9 @@ COMMIT;
             if (currentTarget.files.length === 0) {
                 return;
             }
+            sqlPostMessage({
+                action: "close"
+            });
             await sqlPostMessage({
                 action: "open",
                 data: (
@@ -1947,6 +1953,9 @@ COMMIT;
             "#fileOpenScript1", "click", onFileOpen
         ],
         [
+            "#panelSidebar1", "click", uiHashtagScrollto
+        ],
+        [
             "#scriptSave1", "click", function () {
                 onDbSave({
                     data: sqlEditor.getValue(),
@@ -1956,9 +1965,6 @@ COMMIT;
         ],
         [
             "body", "click", onContextmenu
-        ],
-        [
-            "body", "click", uiHashtagScrollto
         ],
         [
             "body", "keydown", uiLoaderEnd
@@ -1979,42 +1985,49 @@ COMMIT;
     Object.assign(window, {
         domStyleValidate,
         onDbCrud,
+        onDbExec,
         sqlEditor,
         sqlPostMessage,
         sqlResultDict,
         uiLoaderInfo,
         uiRenderError
     });
-    // init sqlDb
-    await(async function () {
-        let data;
-        data = (
-            /\bsqlDb=([^&]+)/
-        ).exec(location.search);
-        if (!data) {
-            return;
-        }
-        data = await fetch(data[1]);
-        data = await data.arrayBuffer();
+    // init jsScript0
+    jsScript0 = (
+        /\bjsScript=([^&]+)/
+    ).exec(location.search);
+    if (jsScript0) {
+        jsScript0.elem = document.createElement("script");
+        jsScript0.elem.src = jsScript0[1];
+        document.head.appendChild(jsScript0.elem);
+    }
+    // init sqlDb0
+    sqlDb0 = (
+        /\bsqlDb=([^&]+)/
+    ).exec(location.search);
+    if (sqlDb0) {
+        sqlDb0 = await fetch(sqlDb0[1]);
+        sqlDb0 = await sqlDb0.arrayBuffer();
         await sqlPostMessage({
             action: "open",
-            data
+            data: sqlDb0
         });
-    }());
-    // init sqlScript
-    await(async function () {
-        let sqlScript;
-        sqlScript = (
-            /\bsqlScript=([^&]+)/
-        ).exec(location.search);
-        sqlScript = sqlScript && sqlScript[1];
-        if (!sqlScript) {
-            return;
-        }
-        sqlScript = await fetch(sqlScript);
-        sqlScript = await sqlScript.text();
-        sqlEditor.setValue(sqlScript);
-    }());
-    // db - exec
-    await onDbExec({});
+    }
+    // init sqlScript0
+    sqlScript0 = (
+        /\bsqlScript=([^&]+)/
+    ).exec(location.search);
+    sqlScript0 = sqlScript0 && sqlScript0[1];
+    if (sqlScript0) {
+        sqlScript0 = await fetch(sqlScript0);
+        sqlScript0 = await sqlScript0.text();
+        sqlEditor.setValue(sqlScript0);
+    }
+    // db - audo-exec-enable
+    if (sqlScript0 || !(sqlDb0 || jsScript0)) {
+        await onDbExec({});
+    // db - audo-exec-disable
+    } else {
+        await onDbRefresh({});
+    }
 });

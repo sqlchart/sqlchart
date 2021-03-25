@@ -5,14 +5,17 @@
 - [https://kaizhu256.github.io/sqlchart/spa.sqlchart.html](https://kaizhu256.github.io/sqlchart/spa.sqlchart.html)
 
 #### screenshot
-![screenshot.sqlchart.chart.bar.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.chart.bar.png)
-![screenshot.sqlchart.chart.line.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.chart.line.png)
-![screenshot.sqlchart.contextmenu.row.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.contextmenu.row.png)
-![screenshot.sqlchart.contextmenu.table.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.contextmenu.table.png)
-![screenshot.sqlchart.modal.clone.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.modal.clone.png)
+[![screenshot.sqlchart.chart.bar.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.chart.bar.png)](https://kaizhu256.github.io/sqlchart/spa.sqlchart.html)
+[![screenshot.sqlchart.chart.line.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.chart.line.png)](https://kaizhu256.github.io/sqlchart/spa.sqlchart.html)
+[![screenshot.sqlchart.contextmenu.row.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.contextmenu.row.png)](https://kaizhu256.github.io/sqlchart/spa.sqlchart.html)
+[![screenshot.sqlchart.contextmenu.table.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.contextmenu.table.png)](https://kaizhu256.github.io/sqlchart/spa.sqlchart.html)
+[![screenshot.sqlchart.modal.clone.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.modal.clone.png)](https://kaizhu256.github.io/sqlchart/spa.sqlchart.html)
 
-#### changelog 2021.3.21
-- column-align legend
+#### changelog 2021.3.24
+- sqlchart - change default-font from verdana to consolas
+- sqlchart - fix memory-leak by closing old database before opening new one
+- sqlchart - add query-option jsScript to create custom ui
+- sqlchart - conditional auto-exec-script
 - none
 
 #### todo
