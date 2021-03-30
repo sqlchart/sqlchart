@@ -967,7 +967,7 @@ Definition of the CSV Format
                                 backgroundColor: "rgba(127,127,127,0.5)"
                             },
                             enabled: true,
-                            mode: "x"
+                            mode: "xy"
                         }
                     }
                 },
@@ -996,7 +996,11 @@ Definition of the CSV Format
                 },
                 tooltips: {
                     intersect: false,
-                    mode: "nearest"
+                    mode: (
+                        chartType === "line"
+                        ? "nearest"
+                        : "index"
+                    )
                 }
             },
             plugins: [
@@ -1986,6 +1990,7 @@ COMMIT;
         domStyleValidate,
         onDbCrud,
         onDbExec,
+        onDbRefresh,
         sqlEditor,
         sqlPostMessage,
         sqlResultDict,
@@ -2023,10 +2028,10 @@ COMMIT;
         sqlScript0 = await sqlScript0.text();
         sqlEditor.setValue(sqlScript0);
     }
-    // db - audo-exec-enable
+    // db - auto-exec-enable
     if (sqlScript0 || !(sqlDb0 || jsScript0)) {
         await onDbExec({});
-    // db - audo-exec-disable
+    // db - auto-exec-disable
     } else {
         await onDbRefresh({});
     }

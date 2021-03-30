@@ -20,8 +20,13 @@ a:hover {
     display: inline-block;
     text-decoration: none;
 }
-body {
-    font-family: consolas, monaco, monospace;
+body,
+code,
+pre,
+textarea,
+#datatables_buttons_info table tbody tr td:nth-child(1),
+#panelContent1 .CodeMirror {
+    font-family: consolas, menlo, monospace;
     font-size: 11px;
 }
 button,
@@ -34,14 +39,6 @@ button:hover,
     height: 20px;
     min-width: 50px;
 }
-code,
-pre,
-textarea,
-#datatables_buttons_info table tbody tr td:nth-child(1),
-#panelContent1 .CodeMirror {
-    font-family: Consolas, Menlo, monospace;
-    font-size: 11px;
-}
 table {
     border-collapse: collapse !important;
     width: 100%;
@@ -53,6 +50,15 @@ table tbody tr td,
     padding: 2px 2px 0 2px;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+table tbody tr td button,
+table tbody tr td input,
+table tbody tr td select,
+table tbody tr td span {
+    display: inline-block;
+    height: 20px;
+    text-align: left;
+    width: 100%;
 }
 #contextmenu1 {
     position: fixed;
@@ -81,13 +87,6 @@ table tbody tr td,
 }
 #datatables_buttons_info table tbody tr td {
     padding: 5px 0;
-}
-#datatables_buttons_info table tbody tr td input,
-#datatables_buttons_info table tbody tr td select,
-#datatables_buttons_info table tbody tr td span {
-    display: inline-block;
-    height: 20px;
-    width: 100%;
 }
 #datatables_buttons_info table tbody tr td span {
     padding: 2px 2px 0 2px;
@@ -124,10 +123,11 @@ table tbody tr td,
     width: 100%;
 }
 #panelContent1 {
-    padding: 0 20px 10px 220px;
+    padding: 0 30px 10px 230px;
 }
 #panelContent1 canvas {
     height: 300px;
+    width: 100%;
 }
 #panelContent1 .CodeMirror {
     height: 400px;
@@ -152,6 +152,15 @@ table tbody tr td,
 #panelContent1 .dataTables_info {
     padding-top: 2px;
 }
+#panelContent1 .header {
+    font-size: medium;
+    font-weight: bold;
+    margin: 10px;
+    text-align: center;
+}
+#panelContent1 .header:nth-child(1) {
+    margin-top: 0;
+}
 #panelContent1 .sqlResultChart .chartContainer {
     display: block !important;
 }
@@ -168,15 +177,18 @@ table tbody tr td,
 #panelContent1 .sqlResultData .chartContainer .chartResetZoom {
     position: absolute;
 }
+#panelContent1 .sqlResultData:nth-child(1) {
+    margin-top: 0;
+}
 #panelContent1 .sqlResultData[data-t_type=index] {
-    display: none;
-    /* margin-top: 0; */
+    height: 0;
+    margin: 0;
+    padding: 0;
+    width: 0;
 }
-/*
 #panelContent1 .sqlResultData[data-t_type=index] .title {
-    text-align: left;
+    display: none;
 }
-*/
 #panelContent1 .title {
     margin: 0;
     padding: 5px;
@@ -207,16 +219,17 @@ table tbody tr td,
     cursor: pointer;
     font-weight: normal;
 }
-#panelSidebar1 table tbody .trButton td {
+#panelSidebar1 table tbody .trInput td {
     padding: 0;
 }
-#panelSidebar1 table tbody .trButton td button {
+#panelSidebar1 table tbody .trInput td button {
     padding-left: 4px;
-    text-align: left;
-    width: 100%;
 }
-#panelSidebar1 table tbody .trButton td:nth-child(2) {
+#panelSidebar1 table tbody .trInput td:nth-child(2) {
     padding-left: 0;
+}
+#panelSidebar1 .header {
+    font-weight: bold;
 }
 @keyframes loaderSpin {
     0% {
@@ -321,11 +334,11 @@ button:hover,
 #panelSidebar1 table tbody tr[data-t_type=index] td:nth-child(1) {
     background: #eef;
 }
-#panelSidebar1 table tbody .trButton {
+#panelSidebar1 table tbody .trInput {
     background: #bbb;
     border: 0 solid #000;
 }
-#panelSidebar1 table tbody .trButton td button {
+#panelSidebar1 table tbody .trInput td button {
     border-right: 0 solid #000;
 }
 </style>
@@ -426,34 +439,34 @@ style="
     </table>
 </div> <!-- #contextmenu1 -->
 <div id="panelSidebar1">
-    <div>sqlite database</div>
+    <div class="header">sqlite database</div>
     <table>
     <tbody>
-    <tr class="trButton">
+    <tr class="trInput">
         <td>D</td>
         <td>
         <button class="button" id="dbRefresh1">database - refresh</button>
         </td>
     </tr>
-    <tr class="trButton">
+    <tr class="trInput">
         <td>D</td>
         <td>
         <button class="button" id="fileOpenDb1">database - open</button>
         </td>
     </tr>
-    <tr class="trButton">
+    <tr class="trInput">
         <td>D</td>
         <td>
         <button class="button" id="dbSave1">database - save</button>
         </td>
     </tr>
-    <tr class="trButton">
+    <tr class="trInput">
         <td>C</td>
         <td>
         <button class="button" id="fileOpenCsv1">csv - open</button>
         </td>
     </tr>
-    <tr class="trButton">
+    <tr class="trInput">
         <td>T</td>
         <td>
         <button class="button" id="dbTableCreate1">table - create</button>
@@ -461,22 +474,22 @@ style="
     </tr>
     </tbody>
     </table>
-    <div>sqlite script</div>
+    <div class="header">sqlite script</div>
     <table>
     <tbody>
-    <tr class="trButton">
+    <tr class="trInput">
         <td>S</td>
         <td>
         <button class="button" id="fileOpenScript1">script - open</button>
         </td>
     </tr>
-    <tr class="trButton">
+    <tr class="trInput">
         <td>S</td>
         <td>
         <button class="button" id="scriptSave1">script - save</button>
         </td>
     </tr>
-    <tr class="trButton">
+    <tr class="trInput">
         <td>S</td>
         <td>
         <button class="button" id="dbExec1">script - execute</button>
@@ -491,12 +504,13 @@ style="
     </tr>
     </tbody>
     </table>
-    <div>sqlite query results</div>
+    <div class="header">sqlite query results</div>
     <table id="sqlResultMeta1"><tbody></tbody></table>
-    <div>sqlite tables and indices</div>
+    <div class="header">sqlite tables and indices</div>
     <table id="sqlResultMeta2"><tbody></tbody></table>
 </div> <!-- #panelSidebar1 -->
 <div id="panelContent1">
+    <div class="header">sqlite script</div>
     <div id="editor1">
     <div class="title">editor</div>
     <textarea>
@@ -516,6 +530,8 @@ INSERT INTO stock_historical (ticker, date, price) VALUES
     ('googl', '2020-07-01', 1487.94),  ('googl', '2020-08-01', 1629.53),
     ('googl', '2020-09-01', 1465.59),  ('googl', '2020-10-01', 1616.10),
     ('googl', '2020-11-01', 1754.40),  ('googl', '2020-12-01', 1752.64);
+CREATE UNIQUE INDEX idx_stock_historical_ticker_date
+    ON stock_historical(ticker, date);
 UPDATE stock_historical
     SET price = price / 77.37
     WHERE ticker = 'aapl';
@@ -783,7 +799,9 @@ SELECT * FROM enron_email_fts;
 </textarea>
     <button class="button" id="dbExec2">script - execute</button>
     </div> <!-- #editor1 -->
+    <div class="header">sqlite query results</div>
     <div id="sqlResultData1"></div>
+    <div class="header">sqlite tables and indices</div>
     <div id="sqlResultData2"></div>
 </div> <!-- #panelContent1 -->
 <script src="assets.bootstrap-v3.4.1.datatables-v1.10.21.chartjs-v2.9.4.codemirror-5.58.3.rollup.js"></script>
