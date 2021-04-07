@@ -18,5 +18,5 @@
     "manifest_version": 2,
     "name": "sqlchart",
     "offline_enabled": true,
-    "version": "2021.3.29"
+    "version": "2021.4.6"
 }

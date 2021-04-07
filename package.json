@@ -1,7 +1,7 @@
 {
     "description": "this zero-dependency package will provide frontend-ui to visualize and edit sqlite-database as 2d-charts",
-    "fileCount": 23,
-    "fileCountPublish": 20,
+    "fileCount": 29,
+    "fileCountPublish": 26,
     "name": "sqlchart",
-    "version": "2021.3.29"
+    "version": "2021.4.6"
 }

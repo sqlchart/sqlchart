@@ -8,10 +8,9 @@
 [![screenshot.sqlchart.chart.contextmenu.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.chart.contextmenu.png)](https://kaizhu256.github.io/sqlchart/spa.sqlchart.html)
 [![screenshot.sqlchart.modal.clone.png](https://kaizhu256.github.io/sqlchart/screenshot.sqlchart.modal.clone.png)](https://kaizhu256.github.io/sqlchart/spa.sqlchart.html)
 
-#### changelog 2021.3.29
+#### changelog 2021.4.6
+- update css
 - update screenshots
-- sqlchart - add section-separators in #panelContent1
-- sqlchart - change zoom-mode to xy and barchart-tooltip-mode to index
 - none
 
 #### todo
