@@ -3,12 +3,12 @@ shRawLibFetch
 {
     "fetchList": [
         {
-            "sh": "curl -o assets.sqljs-v1.4.0.wasm https://raw.githubusercontent.com/kaizhu256/sql.js/v1.4.0.json1.dist/dist/sql-wasm-debug.wasm",
+            "sh": "curl -o assets.sqljs-v1.4.0.wasm https://raw.githubusercontent.com/sqlchart/sql.js/v1.4.0.json1.dist/dist/sql-wasm-debug.wasm",
             "url": "https://github.com/sql-js/sql.js/tree/v1.4.0/dist/sql-wasm-debug.wasm"
         },
         {
             "url": "https://github.com/sql-js/sql.js/tree/v1.4.0/dist/worker.sql-wasm-debug.js",
-            "url2": "https://raw.githubusercontent.com/kaizhu256/sql.js/v1.4.0.json1.dist/dist/worker.sql-wasm-debug.js"
+            "url2": "https://raw.githubusercontent.com/sqlchart/sql.js/v1.4.0.json1.dist/dist/worker.sql-wasm-debug.js"
         }
     ]
 }
